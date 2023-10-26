@@ -1,6 +1,8 @@
 import { pincel } from "./index.js";
 
+
 export default function drawGame(game, requestAnimationFrame, currentPlayerId) {
+  
   function drawReact(x, y, size, color) {
     pincel.fillStyle = color;
     pincel.fillRect(x, y, size, size);
@@ -25,4 +27,5 @@ export default function drawGame(game, requestAnimationFrame, currentPlayerId) {
   requestAnimationFrame(() => {
     drawGame(game, requestAnimationFrame, currentPlayerId);
   });
+  
 }

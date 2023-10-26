@@ -6,3 +6,11 @@
   width: 600px;
   height: 600px;
 }
+.list{
+  width: 50%;
+  height: 80vh;
+  border: 10px solid grey;
+}
+.all{
+  display: flex;
+}

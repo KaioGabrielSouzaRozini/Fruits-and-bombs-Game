@@ -1,9 +1,10 @@
 export default function createGame() {
   const state = {
+    playerIds: [],
     players: {},
     canvas: {
-      width:50,
-      height: 50,
+      width:30,
+      height: 30,
     },
   };
   const observers = [];
@@ -37,6 +38,7 @@ export default function createGame() {
       x: playerX,
       y: playerY,
     };
+    state.playerIds.push(playerId)
 
     notifyAll({
       type: "add-player",
@@ -49,6 +51,13 @@ export default function createGame() {
   function removePlayer(command) {
     const playerId = command.playerId;
     delete state.players[playerId];
+
+
+    state.playerIds.forEach((element, index) => {
+      if(element == playerId){
+        state.playerIds.splice(index, 1)
+      }
+    })
 
     notifyAll({
       type: "remove-player",
