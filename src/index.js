@@ -29,14 +29,14 @@ socket.on("setup", (state) => {
   if(state["playerIds"].length == 1){
     let button1 = document.createElement("button")
     button1.addEventListener("click",() => {
-      socket.emit("start-game", "no");
+      socket.emit("start-game");
     })
     button1.innerText = "Start"
     buttons.appendChild(button1)
 
     let button2 = document.createElement("button")
     button2.addEventListener("click",() => {
-      socket.emit("end-game", "yes");
+      socket.emit("end-game");
     })
     button2.innerText = "End"
     buttons.appendChild(button2)

@@ -10,17 +10,15 @@ export default function createGame() {
   };
   const observers = [];
   let adm = 1
-
-  function start(end) {
-    console.log(end)
+  var loopGame;
+  
+  function start() {
     const frequency = 3000
+    loopGame = setInterval(addFruit, frequency)
+  }
 
-    if(end == "no") {
-      var loopGame = setInterval(addFruit, frequency)
-    }
-    if(end == "yes"){
-      clearInterval(loopGame)
-    }
+  function end(){
+    clearInterval(loopGame)
   }
 
 
@@ -193,6 +191,6 @@ function removeFruit(command) {
     setState,
     subscribe,
     start,
-
+    end
   };
 }
