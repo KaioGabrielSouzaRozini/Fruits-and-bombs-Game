@@ -19,6 +19,10 @@ export default function drawGame(game, requestAnimationFrame, currentPlayerId) {
     const fruit = game.state.fruits[fruitId];
     drawReact(fruit.x, fruit.y, 1, "green");
   }
+  for (const bombId in game.state.bombs) {
+    const bomb = game.state.bombs[bombId];
+    drawReact(bomb.x, bomb.y, 1, "red");
+  }
 
   const currentPlayer = game.state.players[currentPlayerId];
   if (currentPlayer) {

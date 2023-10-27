@@ -3,6 +3,7 @@ export default function createGame() {
     playerIds: [],
     fruits: {},
     players: {},
+    bombs: {},
     canvas: {
       width:30,
       height: 30,
@@ -11,14 +12,23 @@ export default function createGame() {
   const observers = [];
   let adm = 1
   var loopGame;
-  
-  function start() {
-    const frequency = 3000
+  var loopBomb;
+
+  function start(frequency) {
     loopGame = setInterval(addFruit, frequency)
   }
 
   function end(){
     clearInterval(loopGame)
+  }
+
+  function bombs() {
+    const frequency = 3000
+    loopBomb = setInterval(addBomb, frequency)
+  }
+
+  function endBombs(){
+    clearInterval(loopBomb)
   }
 
 
@@ -37,12 +47,7 @@ export default function createGame() {
   }
 
   function addPlayer(command) {
-    let playerStatus;
-    if(adm == 1){
-      playerStatus = "adm"
-    } else {
-      playerStatus = "normal"
-    }
+
     const playerId = command.playerId;
     const playerX =
       "playerX" in command
@@ -54,7 +59,6 @@ export default function createGame() {
         : Math.floor(Math.random() * state.canvas.height);
 
     state.players[playerId] = {
-      playerStatus: playerStatus,
       x: playerX,
       y: playerY,
       points: 0
@@ -63,7 +67,6 @@ export default function createGame() {
 
     notifyAll({
       type: "add-player",
-      playerStatus: playerStatus,
       playerId: playerId,
       playerX: playerX,
       playerY: playerY,
@@ -115,6 +118,35 @@ function removeFruit(command) {
         type: 'remove-fruit',
         fruitId: fruitId,
     })
+}
+
+function addBomb(command) {
+  const bombId = command ? command.bombId : Math.floor(Math.random() * 10000000)
+  const bombX = command ? command.bombX : Math.floor(Math.random() * state.canvas.width)
+  const bombY = command ? command.bombY : Math.floor(Math.random() * state.canvas.height)
+
+  state.bombs[bombId] = {
+      x: bombX,
+      y: bombY
+  }
+
+  notifyAll({
+      type: 'add-bomb',
+      bombId: bombId,
+      bombX: bombX,
+      bombY: bombY
+  })
+}
+
+function removeBomb(command) {
+  const bombId = command.bombId
+
+  delete state.bombs[bombId]
+
+  notifyAll({
+      type: 'remove-bomb',
+      bombId: bombId,
+  })
 }
 
   function movePlayer(command) {
@@ -178,6 +210,23 @@ function removeFruit(command) {
         }
 
       }
+      for (const bombId in state.bombs) {
+        const bomb = state.bombs[bombId];
+        console.log(`check ${playerId} and ${bombId}`);
+
+        if (player.x === bomb.x && player.y === bomb.y) {
+          console.log(`COLLISION between ${playerId} and ${bombId}`);
+          player.points -= 1;
+          removeBomb({ bombId: bombId });
+          notifyAll({
+            type: 'remove-point',
+            playerId: playerId,
+            playerPoints: player.points,
+        })
+        console.log(player)
+        }
+
+      }
     }
 
   }
@@ -187,10 +236,14 @@ function removeFruit(command) {
     movePlayer,
     addFruit,
     removeFruit,
+    addBomb,
+    removeBomb,
     state,
     setState,
     subscribe,
     start,
+    bombs,
+    endBombs,
     end
   };
 }

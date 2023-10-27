@@ -36,12 +36,19 @@ sockets.on("connection", (socket) => {
     game.movePlayer(command);
   });
 
-  socket.on("start-game", () => {
-    game.start()
+  socket.on("start-game", (command) => {
+    game.start(command)
   });
 
   socket.on("end-game", () => {
     game.end()
+  });
+
+  socket.on("bombs", () => {
+    game.bombs()
+  });
+  socket.on("end-bombs", () => {
+    game.endBombs()
   });
 });
 

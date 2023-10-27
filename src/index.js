@@ -29,7 +29,7 @@ socket.on("setup", (state) => {
   if(state["playerIds"].length == 1){
     let button1 = document.createElement("button")
     button1.addEventListener("click",() => {
-      socket.emit("start-game");
+      socket.emit("start-game", 3000);
     })
     button1.innerText = "Start"
     buttons.appendChild(button1)
@@ -40,6 +40,34 @@ socket.on("setup", (state) => {
     })
     button2.innerText = "End"
     buttons.appendChild(button2)
+
+    let button3 = document.createElement("button")
+    button3.addEventListener("click",() => {
+      socket.emit("start-game", 2000);
+    })
+    button3.innerText = "velocidade 2"
+    buttons.appendChild(button3)
+
+    let button4 = document.createElement("button")
+    button4.addEventListener("click",() => {
+      socket.emit("start-game", 1000);
+    })
+    button4.innerText = "velocidade 3"
+    buttons.appendChild(button4)
+
+    let button5 = document.createElement("button")
+    button5.addEventListener("click",() => {
+      socket.emit("bombs", 3000);
+    })
+    button5.innerText = "bombs"
+    buttons.appendChild(button5)
+
+    let button6 = document.createElement("button")
+    button6.addEventListener("click",() => {
+      socket.emit("end-bombs");
+    })
+    button6.innerText = "endBombs"
+    buttons.appendChild(button6)
   }
 
   state["playerIds"].forEach((element) => { 
@@ -121,9 +149,27 @@ socket.on("remove-fruit", (command) => {
 
   game.removeFruit(command);
 });
+
+socket.on("add-bomb", (command) => {
+  console.log(`Receiving ${command.type} -> ${command.bombId}`);
+  game.addBomb(command);
+});
+
+socket.on("remove-bomb", (command) => {
+  console.log(`Receiving ${command.type} -> ${command.bombId}`);
+
+  game.removeBomb(command);
+});
+
 socket.on("add-point", (command) => {
   console.log(`Receiving ${command.type} -> ${command.playerId} -> ${command.playerPoints}`);
   let points = document.getElementById(`${command.playerId}p`)
   points.innerText = command.playerPoints
   game.removeFruit(command);
+});
+socket.on("remove-point", (command) => {
+  console.log(`Receiving ${command.type} -> ${command.playerId} -> ${command.playerPoints}`);
+  let points = document.getElementById(`${command.playerId}p`)
+  points.innerText = command.playerPoints
+  game.removeBomb(command);
 });
