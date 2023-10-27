@@ -6,10 +6,11 @@ import { Server } from "socket.io";
 const app = express();
 const server = http.createServer(app);
 const sockets = new Server(server);
-
+let adm = 1
 app.use(express.static("src"));
 
 const game = createGame();
+
 
 game.subscribe((command) => {
   console.log(`Emitting ${command.type}`);
@@ -34,7 +35,17 @@ sockets.on("connection", (socket) => {
 
     game.movePlayer(command);
   });
+
+  socket.on("start-game", (command) => {
+    game.start(command)
+  });
+
+  socket.on("end-game", (command) => {
+    game.start(command)
+  });
 });
+
+
 
 server.listen(3000, () => {
   console.log(`> Server listening on port: 3000`);

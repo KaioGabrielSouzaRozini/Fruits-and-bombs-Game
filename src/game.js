@@ -9,6 +9,20 @@ export default function createGame() {
     },
   };
   const observers = [];
+  let adm = 1
+
+  function start(end) {
+    console.log(end)
+    const frequency = 3000
+
+    if(end == "no") {
+      var loopGame = setInterval(addFruit, frequency)
+    }
+    if(end == "yes"){
+      clearInterval(loopGame)
+    }
+  }
+
 
   function subscribe(observerFunction) {
     observers.push(observerFunction);
@@ -25,6 +39,12 @@ export default function createGame() {
   }
 
   function addPlayer(command) {
+    let playerStatus;
+    if(adm == 1){
+      playerStatus = "adm"
+    } else {
+      playerStatus = "normal"
+    }
     const playerId = command.playerId;
     const playerX =
       "playerX" in command
@@ -36,13 +56,16 @@ export default function createGame() {
         : Math.floor(Math.random() * state.canvas.height);
 
     state.players[playerId] = {
+      playerStatus: playerStatus,
       x: playerX,
       y: playerY,
+      points: 0
     };
     state.playerIds.push(playerId)
 
     notifyAll({
       type: "add-player",
+      playerStatus: playerStatus,
       playerId: playerId,
       playerX: playerX,
       playerY: playerY,
@@ -69,8 +92,8 @@ export default function createGame() {
 
   function addFruit(command) {
     const fruitId = command ? command.fruitId : Math.floor(Math.random() * 10000000)
-    const fruitX = command ? command.fruitX : Math.floor(Math.random() * state.screen.width)
-    const fruitY = command ? command.fruitY : Math.floor(Math.random() * state.screen.height)
+    const fruitX = command ? command.fruitX : Math.floor(Math.random() * state.canvas.width)
+    const fruitY = command ? command.fruitY : Math.floor(Math.random() * state.canvas.height)
 
     state.fruits[fruitId] = {
         x: fruitX,
@@ -147,10 +170,18 @@ function removeFruit(command) {
 
         if (player.x === fruit.x && player.y === fruit.y) {
           console.log(`COLLISION between ${playerId} and ${fruitId}`);
+          player.points += 1;
           removeFruit({ fruitId: fruitId });
+          notifyAll({
+            type: 'add-point',
+            playerId: playerId,
+            playerPoints: player.points,
+        })
         }
+
       }
     }
+
   }
   return {
     addPlayer,
@@ -161,5 +192,7 @@ function removeFruit(command) {
     state,
     setState,
     subscribe,
+    start,
+
   };
 }
