@@ -14,6 +14,14 @@ export default function createGame() {
   var loopGame;
   var loopBomb;
 
+  function win(command){
+    alert(`${command.playerId} Win the game!`)
+    notifyAll({
+      type: 'win-game',
+      playerId: command.playerId,
+  })
+  }
+
   function start(frequency) {
     loopGame = setInterval(addFruit, frequency)
   }
@@ -202,6 +210,12 @@ function removeBomb(command) {
           console.log(`COLLISION between ${playerId} and ${fruitId}`);
           player.points += 1;
           removeFruit({ fruitId: fruitId });
+          if(player.points >= 3){
+            notifyAll({
+              type: 'win-game',
+              playerId: playerId,
+          })
+          }
           notifyAll({
             type: 'add-point',
             playerId: playerId,
@@ -244,6 +258,7 @@ function removeBomb(command) {
     start,
     bombs,
     endBombs,
-    end
+    end,
+    win
   };
 }

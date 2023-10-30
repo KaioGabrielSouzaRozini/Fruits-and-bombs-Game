@@ -173,3 +173,9 @@ socket.on("remove-point", (command) => {
   points.innerText = command.playerPoints
   game.removeBomb(command);
 });
+socket.on("win-game", (command) => {
+  console.log(`Receiving ${command.type} -> ${command.playerId}`);
+  game.win(command);
+  socket.emit("end-game");
+  socket.emit("end-bombs");
+});
