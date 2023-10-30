@@ -10,7 +10,6 @@ export default function createGame() {
     },
   };
   const observers = [];
-  let adm = 1
   var loopGame;
   var loopBomb;
 

@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 const app = express();
 const server = http.createServer(app);
 const sockets = new Server(server);
-let adm = 1
+
 app.use(express.static("src"));
 
 const game = createGame();

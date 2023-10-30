@@ -11,8 +11,6 @@ const buttons = document.getElementById("buttons")
 const game = createGame();
 const keyboardListener = createKeyboardListener(document);
 
-let adm = 1
-
 const socket = io();
 
 socket.on("connect", () => {
@@ -102,7 +100,6 @@ socket.on("setup", (state) => {
 
 socket.on("add-player", (command) => {
   const playerId = socket.id;
-  console.log(command)
   console.log(`Receiving ${command.type} -> ${command.playerId}`);
 
 
